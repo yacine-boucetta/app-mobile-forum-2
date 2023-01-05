@@ -4,9 +4,9 @@ import { User } from './users.entity';
 
 @Injectable()
 export class UsersService {
-  findAll() {
-      throw new Error('Method not implemented.');
-  }
+ findAll(): Promise<User[]> {
+  return this.usersRepository.query('SELECT * FROM user;');
+}
   constructor(
     @Inject('user')
     private usersRepository: Repository<User>,

@@ -13,7 +13,7 @@ export class UsersController {
         return  this.usersService.create(UserEntity)
     }
 
-    @Get()
+    @Get('all')
     findAll() {
       return this.usersService.findAll();
     }
