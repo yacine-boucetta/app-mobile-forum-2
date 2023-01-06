@@ -1,9 +1,12 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from "typeorm"
 
 @Entity()
-export class User {
+export class User extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
+
+  @Column({ length: 255 })
+  email: string;
 
   @Column({ length: 255 })
   name: string;
@@ -12,9 +15,9 @@ export class User {
   lastname: string;
 
   @Column({ length: 255 })
-  email: string;
-
-  @Column({ length: 255 })
   password: string;
+  
 
 }
+
+

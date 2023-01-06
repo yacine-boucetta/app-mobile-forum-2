@@ -1,5 +1,7 @@
 
+import { Picture } from 'src/pictures/pictures.entity';
 import { User } from 'src/users/users.entity';
+import{ Event } from 'src/events/events.entity'
 import { DataSource } from 'typeorm';
 
 export const  databaseProviders = [
@@ -11,10 +13,10 @@ export const  databaseProviders = [
         host: 'localhost',
         port: 3306,
         username: 'root',
-        password: 'root',
+        password: '',
         database: 'api_share_event',
         entities: [
-            User,
+            User,Picture,Event
         ],
         synchronize: true,
       });
