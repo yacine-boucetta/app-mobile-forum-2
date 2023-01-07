@@ -15,7 +15,7 @@ export const  databaseProviders = [
         database: 'api_share_event',
         entities: [
             User,
-            Event
+            
         ],
         synchronize: true,
       });

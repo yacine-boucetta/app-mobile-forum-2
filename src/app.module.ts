@@ -5,7 +5,7 @@ import { AppService } from './app.service';
 import { DatabaseModule } from './database/database.module';
 import { User } from './users/users.entity';
 import { UsersModule } from './users/users.module';
-import { EventsModule } from './events/events.module';
+
 
 @Module({
   imports: [
@@ -18,12 +18,12 @@ import { EventsModule } from './events/events.module';
         database: 'api_share_event',
         entities: [
             User,
-            Event
+           
         ],
         synchronize: true,
     }),
     forwardRef(() => UsersModule),
-    forwardRef(() => EventsModule),
+
     forwardRef(() => DatabaseModule),
     
   ],
