@@ -1,16 +1,14 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { EventsService } from './events.service';
 import { EventsController } from './events.controller';
-import { eventsProviders } from './events.providers';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { DatabaseModule } from 'src/database/database.module';
-import{ Event } from './events.entity'
+import { Event } from './model/entities/events.entity';
+import { AppModule } from 'src/app.module';
 
 @Module({
-  imports:[TypeOrmModule.forFeature([Event]),
-  forwardRef(() => DatabaseModule)],
-  providers: [...eventsProviders,EventsService],
+  imports: [TypeOrmModule.forFeature([Event])],
+  providers: [EventsService],
   controllers: [EventsController],
-  exports:[EventsService]
+  exports: [TypeOrmModule],
 })
 export class EventsModule {}

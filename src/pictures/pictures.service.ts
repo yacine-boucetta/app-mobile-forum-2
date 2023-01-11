@@ -1,31 +1,27 @@
 import { Injectable, Inject } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Picture } from './pictures.entity';
-
+import { CreatePictureDto } from './dto/create-picture.dto';
+import { UpdatePictureDto } from './dto/update-picture.dto';
+import { Picture } from './model/entities/pictures.entity';
 
 @Injectable()
 export class PicturesService {
   constructor(
-    @Inject('picture')
-    private picturesRepository: Repository<Picture>,
+    @InjectRepository(Picture) private readonly picturesRepository: Repository<Picture>,
   ) {}
 
-  async create(picturesentity: Picture) {
-
-    const insertPictureDatabse = this.picturesRepository
-      .createQueryBuilder()
-      .insert()
-      .into(Picture)
-      .values([
+  async create(picture: CreatePictureDto) {
+  
+    return this.picturesRepository.save(
         {
-          name: picturesentity.name,
-          url: picturesentity.url,
-          id_user: picturesentity.id_user,
-          date_picture:Date.now()
-        }
-      ])
-      .execute();
-    await insertPictureDatabse;
+          name: picture.name,
+          url: picture.url,
+          id_user: picture.id_user,
+          date_picture: new Date()
+        },
+      )
+    
   }
 
   findAll(): Promise<Picture[]> {
@@ -36,18 +32,15 @@ export class PicturesService {
     return this.picturesRepository.findOneBy({ id });
   }
 
-async  updatePicture(id: string,picturesentity:Picture) {
+  async updatePicture(id: string, picture: UpdatePictureDto) {
     const updatePictureDatabase = this.picturesRepository
-    .createQueryBuilder()
-    .update(Picture)
-    .set({
-        name: picturesentity.name,
-        url: picturesentity.url,
-        id_user: picturesentity.id_user,
-        date_picture: picturesentity.date_picture,
-    })
-    .where("id = :id", { id: id})
-    .execute()
+      .update(id,{
+        name: picture.name,
+        url: picture.url,
+        id_user: picture.id_user,
+        date_picture: new Date()
+      })
+    
     return await updatePictureDatabase;
   }
   remove(id: number) {

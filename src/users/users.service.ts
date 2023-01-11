@@ -1,54 +1,52 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable} from '@nestjs/common';
 import { Repository } from 'typeorm';
-import { User } from './users.entity';
+import { User } from './model/entities/users.entity';
+import { CreateUserDto } from './dto/create-user.dto';
+import { UserInterface } from './model/users.interface';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
   constructor(
-    @Inject('user')
-    private usersRepository: Repository<User>,
+    @InjectRepository(User) private readonly usersRepository: Repository<User>,
   ) {}
 
-  async create(userentity: User) {
-    const insertUserDatabse = this.usersRepository
-      .createQueryBuilder()
-      .insert()
-      .into(User)
-      .values([
-        {
-          email: userentity.email,
-          name: userentity.name,
-          lastname: userentity.lastname,
-          password: await bcrypt.hash(userentity.password, 10),
-        },
-      ])
-      .execute();
-    await insertUserDatabse;
+  async create(user: CreateUserDto): Promise<UserInterface> {
+    const passwordHash= await bcrypt.hash(user.password,10);
+    return this.usersRepository.save(
+      {
+        email:user.email,
+        name:user.name,
+        lastname:user.lastname,
+        password: passwordHash,
+      }
+    );
   }
 
   findAll(): Promise<User[]> {
     return this.usersRepository.find();
   }
 
+  findOneByEmail(email:string){
+    return this.usersRepository.findOneBy({ email});
+  }
   findOne(id: number) {
     return this.usersRepository.findOneBy({ id });
   }
-
-async  updateUser(id: string,userentity:User) {
-    const updateUserDatabase = this.usersRepository
-    .createQueryBuilder()
-    .update(User)
-    .set({
-      email: userentity.email,
-      name: userentity.name,
-      lastname: userentity.lastname,
-      password: await bcrypt.hash(userentity.password, 10)
-    })
-    .where("id = :id", { id: id})
-    .execute()
-    return await updateUserDatabase;
+  async updateUser(id: number, user: UpdateUserDto): Promise<any> {
+    const passwordHash= await bcrypt.hash(user.password,10);
+    return this.usersRepository.update(id,
+    {
+      email:user.email,
+      name:user.name,
+      lastname:user.lastname,
+      password: passwordHash
+    });
   }
+
+
   remove(id: number) {
     return this.usersRepository.delete({ id });
   }

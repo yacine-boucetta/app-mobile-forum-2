@@ -1,34 +1,32 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable} from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Event } from './events.entity';
+import { CreateEventDto } from './dto/create-event.dto';
+import { UpdateEventDto } from './dto/update-dto';
+import { Event } from './model/entities/events.entity';
+import { EventInterface } from './model/events.interface';
 
 
 @Injectable()
 export class EventsService {
   constructor(
-    @Inject('event')
-    private eventsRepository: Repository<Event>,
+    @InjectRepository(Event) private readonly eventsRepository: Repository<Event>
   ) {}
 
-  async create(eventsentity: Event) {
-
-    const insertEventDatabse = this.eventsRepository
-      .createQueryBuilder()
-      .insert()
-      .into(Event)
-      .values([
-        {
-            name: eventsentity.name,
-            description: eventsentity.name,
-            start_date: eventsentity.start_date,
-            end_date: eventsentity.end_date,
-            id_user: eventsentity.id_user,
-            event_state: eventsentity.event_state
-        }
-      ])
-      .execute();
-    await insertEventDatabse;
-  }
+ async create(event: CreateEventDto)  {
+  
+   return this.eventsRepository.save({
+    name:event.name,
+    start_date:new Date(),
+    end_date:new Date(),
+    id_user:event.id_user,
+    event_state:event.event_state,
+    description:event.description
+  })
+     
+  }   
+      
+  
 
   findAll(): Promise<Event[]> {
     return this.eventsRepository.find();
@@ -38,20 +36,18 @@ export class EventsService {
     return this.eventsRepository.findOneBy({ id });
   }
 
-async  updateEvent(id: string,eventsentity:Event) {
+  async updateEvent(id: string, event:UpdateEventDto) {
     const updateEventDatabase = this.eventsRepository
-    .createQueryBuilder()
-    .update(Event)
-    .set({
-        name: eventsentity.name,
-        description: eventsentity.name,
-        start_date: eventsentity.start_date,
-        end_date: eventsentity.end_date,
-        id_user: eventsentity.id_user,
-        event_state: eventsentity.event_state
-    })
-    .where("id = :id", { id: id})
-    .execute()
+      .update(id,{
+        name: event.name,
+        description: event.name,
+        start_date: new Date(),
+        end_date: new Date(),
+        id_user: event.id_user,
+        event_state: event.event_state,
+      })
+      
+      
     return await updateEventDatabase;
   }
   remove(id: number) {
