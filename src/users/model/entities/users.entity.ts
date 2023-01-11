@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, JoinTable, ManyToMany, RelationId, JoinColumn, BeforeInsert } from "typeorm"
+import { Picture } from "src/pictures/model/entities/pictures.entity";
+import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, JoinTable, ManyToMany, RelationId, JoinColumn, BeforeInsert, OneToMany } from "typeorm"
 import {Event} from '../../../events/model/entities/events.entity'
 @Entity()
 export class User {
@@ -25,7 +26,8 @@ export class User {
 @JoinTable()
 events: Event[];
 
-
+@OneToMany(() => Picture, (picture => picture.id_user)) 
+    picture: Picture[]
 
 }
 

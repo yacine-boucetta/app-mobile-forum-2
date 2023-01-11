@@ -19,20 +19,21 @@ export class AuthService {
         return null;
     }
 
-    async login(email:string,password:string) {
-        const foundUser = await this.UsersService.findOneByEmail(email);
+    async login(GetUserDto:GetUserDto) {
+        const foundUser = await this.UsersService.findOneByEmail(GetUserDto.email);
         if (!foundUser) {
-            throw new NotFoundException();
+            return "l'email est incorrect";
         }
-
-        if (bcrypt.compare(password,foundUser.password)) {
-            return 'youpi'
+        const passwordMatch =bcrypt.compare(GetUserDto.password,foundUser.password);
+        if (!passwordMatch) {
+            return 'l email ou le mot de passe est incorrect'
         }
 
         const payload = {
-            createdAt: new Date().toISOString(),
-            sub: foundUser.id,
-            role: ''
+            id:GetUserDto.id,
+            email:GetUserDto.email,
+            name:GetUserDto.name,
+            lastname:GetUserDto.lastname
         }
         return {
             acess_token: this.jwtService.sign(payload),
