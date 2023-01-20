@@ -21,6 +21,7 @@ export class AuthService {
 
     async login(GetUserDto:GetUserDto) {
         const foundUser = await this.UsersService.findOneByEmail(GetUserDto.email);
+       
         if (!foundUser) {
             return "l'email est incorrect";
         }
@@ -30,11 +31,12 @@ export class AuthService {
         }
 
         const payload = {
-            id:GetUserDto.id,
-            email:GetUserDto.email,
-            name:GetUserDto.name,
-            lastname:GetUserDto.lastname
-        }
+            id:foundUser.id,
+            email:foundUser.email,
+            name:foundUser.name,
+            lastname:foundUser.lastname,
+        } 
+   
         return {
             acess_token: this.jwtService.sign(payload),
         }
