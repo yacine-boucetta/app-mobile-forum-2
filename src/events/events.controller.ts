@@ -16,8 +16,8 @@ export class EventsController {
     return this.eventsService.create(event);
   }
 
-  @Get(':id')
-  findEventByIdAdmin(@Param('id') id: string, @Body() Event: GetEventDto ){
+  @Get(':id_user')
+  findEventByIdAdmin(@Param('id_user') id: string, @Body() Event: GetEventDto ){
     return this.eventsService.findEventByIdAdmin(+id,Event);
   }
 
