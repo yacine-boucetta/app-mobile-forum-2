@@ -5,6 +5,7 @@ import { EventsService } from './events.service';
 import { Param } from '@nestjs/common/decorators';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-dto';
+import { GetEventDto } from './dto/get-event.dto';
 
 @Controller('events')
 export class EventsController {
@@ -13,6 +14,11 @@ export class EventsController {
   @Post('register')
   async register(@Body() event:CreateEventDto) {
     return this.eventsService.create(event);
+  }
+
+  @Get(':id')
+  findEventByIdAdmin(@Param('id') id: string, @Body() Event: GetEventDto ){
+    return this.eventsService.findEventByIdAdmin(+id,Event);
   }
 
   @Get()

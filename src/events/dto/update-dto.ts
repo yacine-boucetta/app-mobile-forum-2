@@ -1,6 +1,6 @@
-import { GetUserDto } from "src/users/dto/get_user.dto";
+import { GetEventDto } from "./get-event.dto";
 
-export class UpdateEventDto extends(GetUserDto){
+export class UpdateEventDto extends(GetEventDto){
 
     readonly name:string;
     readonly start_date:Date;

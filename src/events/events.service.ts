@@ -2,6 +2,7 @@ import { Injectable} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateEventDto } from './dto/create-event.dto';
+import { GetEventDto } from './dto/get-event.dto';
 import { UpdateEventDto } from './dto/update-dto';
 import { Event } from './model/entities/events.entity';
 import { EventInterface } from './model/events.interface';
@@ -30,6 +31,10 @@ export class EventsService {
 
   findAll(): Promise<Event[]> {
     return this.eventsRepository.find();
+  }
+  
+  findEventByIdAdmin(id_user: number,eventDto:GetEventDto): Promise<Event[]> {
+    return this.eventsRepository.findBy({id_user});
   }
 
   findOne(id: number) {

@@ -19,6 +19,7 @@ export class UsersService {
       {
         email:user.email,
         name:user.name,
+        url:user.url,
         lastname:user.lastname,
         password: passwordHash,
       }
@@ -35,12 +36,15 @@ export class UsersService {
   findOne(id: number) {
     return this.usersRepository.findOneBy({ id });
   }
+  
   async updateUser(id: number, user: UpdateUserDto): Promise<any> {
     const passwordHash= await bcrypt.hash(user.password,10);
+    
     return this.usersRepository.update(id,
     {
       email:user.email,
       name:user.name,
+      url:user.url,
       lastname:user.lastname,
       password: passwordHash
     });

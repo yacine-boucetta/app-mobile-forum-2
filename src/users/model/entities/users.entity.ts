@@ -13,6 +13,9 @@ export class User {
   name: string;
 
   @Column({ length: 255 })
+  url: string;
+
+  @Column({ length: 255 })
   lastname: string;
 
   @Column({ length: 255 })
