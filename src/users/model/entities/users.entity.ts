@@ -1,5 +1,5 @@
 import { Picture } from "src/pictures/model/entities/pictures.entity";
-import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, JoinTable, ManyToMany, RelationId, JoinColumn, BeforeInsert, OneToMany } from "typeorm"
+import { Entity, PrimaryGeneratedColumn, Column, JoinTable, ManyToMany, BeforeInsert, OneToMany } from "typeorm"
 import {Event} from '../../../events/model/entities/events.entity'
 @Entity()
 export class User {
