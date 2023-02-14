@@ -1,5 +1,8 @@
 
+import { Transform, TransformFnParams } from 'class-transformer';
+import { format } from 'path';
 import { User } from "src/users/model/entities/users.entity";
+
 import { Entity, PrimaryGeneratedColumn, Column, BaseEntity ,ManyToOne,OneToMany,CreateDateColumn, ManyToMany, JoinColumn, JoinTable,} from "typeorm"
 
 @Entity()
@@ -10,7 +13,6 @@ export class Event  {
 
   @Column({ length: 255 })
   name: string;
-
 
   @Column()
   @CreateDateColumn()
@@ -29,9 +31,10 @@ export class Event  {
  @Column({ length: 255 })
   description: string;
 
+  @Column({ length: 255 })
+  url_event: string;
 
+@Column()
+isPrivate:boolean;
 }
-
-
-
 

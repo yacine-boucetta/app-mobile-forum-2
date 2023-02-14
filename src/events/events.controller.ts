@@ -16,12 +16,12 @@ export class EventsController {
     return this.eventsService.create(event);
   }
 
-  @Get(':id_user')
+  @Get('find/:id_user')
   findEventByIdAdmin(@Param('id_user') id: string, @Body() Event: GetEventDto ){
     return this.eventsService.findEventByIdAdmin(+id,Event);
   }
 
-  @Get()
+  @Get('')
   findAll() {
     return this.eventsService.findAll();
   }

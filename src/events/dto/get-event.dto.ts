@@ -6,4 +6,6 @@ export class GetEventDto{
     readonly id_user?:number;
     readonly event_state?:number;
     readonly description?:string;
+    readonly url_event?:string;
+    readonly isPrivate?:boolean;
 }

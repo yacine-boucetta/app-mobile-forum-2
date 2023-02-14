@@ -10,11 +10,14 @@ import { PicturesModule } from './pictures/pictures.module';
 import { Picture } from './pictures/model/entities/pictures.entity';
 import { EventsModule } from './events/events.module';
 import { AuthModule } from './auth/auth.module';
+import { NestFactory } from '@nestjs/core/nest-factory';
 
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
+    TypeOrmModule.forRoot({ 
+
+
       type: 'mysql',
       host: 'localhost',
       port: 3306,
@@ -33,5 +36,8 @@ import { AuthModule } from './auth/auth.module';
   controllers: [AppController],
   providers: [AppService],
 })
+
+
+
 export class AppModule  {}
 

@@ -1,6 +1,7 @@
 import { Injectable} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { isDate } from 'util/types';
 import { CreateEventDto } from './dto/create-event.dto';
 import { GetEventDto } from './dto/get-event.dto';
 import { UpdateEventDto } from './dto/update-dto';
@@ -15,24 +16,36 @@ export class EventsService {
   ) {}
 
  async create(event: CreateEventDto)  {
-  
-   return this.eventsRepository.save({
+
+;
+    return this.eventsRepository.save({
     name:event.name,
-    start_date:new Date(),
-    end_date:new Date(),
+    start_date:event.start_date,
+    end_date:event.end_date,
     id_user:event.id_user,
     event_state:event.event_state,
-    description:event.description
+    description:event.description,
+    url_event:event.url_event,
+    isPrivate:event.isPrivate
   })
-     
+
   }   
       
-  
+
 
   findAll(): Promise<Event[]> {
-    return this.eventsRepository.find();
+    return  this.eventsRepository.find();
   }
   
+  // findAll2(): Promise<Event[]> {
+  //   return this.eventsRepository
+  //   .find({
+  //     relations: { user: true },
+  //     where: {
+  //         course: { name: "JavaScript Fundamentals", length: "8 hours" },
+  //     },
+  // })
+  // }
   findEventByIdAdmin(id_user: number,eventDto:GetEventDto): Promise<Event[]> {
     return this.eventsRepository.findBy({id_user});
   }
@@ -46,10 +59,11 @@ export class EventsService {
       .update(id,{
         name: event.name,
         description: event.name,
-        start_date: new Date(),
-        end_date: new Date(),
+        start_date: event.start_date,
+        end_date: event.end_date,
         id_user: event.id_user,
         event_state: event.event_state,
+        isPrivate:event.isPrivate
       })
       
       
@@ -59,3 +73,4 @@ export class EventsService {
     return this.eventsRepository.delete({ id });
   }
 }
+
