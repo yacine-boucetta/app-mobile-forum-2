@@ -34,7 +34,8 @@ export class Event  {
   @Column({ length: 255 })
   url_event: string;
 
-@Column()
-isPrivate:boolean;
+  @Column()
+  isPrivate:boolean;
+  
 }
 

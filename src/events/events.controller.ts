@@ -11,15 +11,17 @@ import { GetEventDto } from './dto/get-event.dto';
 export class EventsController {
   constructor( private readonly eventsService: EventsService) {}
 
+  @Get('find/:id_user')
+  findEventByIdAdmin(@Param('id_user') id: number){
+    return this.eventsService.findEventByIdAdmin(+id);
+  }
+
   @Post('register')
   async register(@Body() event:CreateEventDto) {
     return this.eventsService.create(event);
   }
 
-  @Get('find/:id_user')
-  findEventByIdAdmin(@Param('id_user') id: string, @Body() Event: GetEventDto ){
-    return this.eventsService.findEventByIdAdmin(+id,Event);
-  }
+
 
   @Get('')
   findAll() {

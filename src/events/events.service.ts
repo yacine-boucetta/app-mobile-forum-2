@@ -37,17 +37,9 @@ export class EventsService {
     return  this.eventsRepository.find();
   }
   
-  // findAll2(): Promise<Event[]> {
-  //   return this.eventsRepository
-  //   .find({
-  //     relations: { user: true },
-  //     where: {
-  //         course: { name: "JavaScript Fundamentals", length: "8 hours" },
-  //     },
-  // })
-  // }
-  findEventByIdAdmin(id_user: number,eventDto:GetEventDto): Promise<Event[]> {
-    return this.eventsRepository.findBy({id_user});
+  async findEventByIdAdmin(id_user: number) {
+    return  this.eventsRepository.findBy({id_user:id_user});
+
   }
 
   findOne(id: number) {

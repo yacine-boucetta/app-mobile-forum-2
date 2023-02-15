@@ -7,4 +7,6 @@ export interface EventInterface {
     id_user?:number;
     event_state?:number;
     description?:string;
+    url_event:string;
+    isPrivate?:boolean;
   }

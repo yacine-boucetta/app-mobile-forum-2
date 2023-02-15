@@ -31,7 +31,7 @@ export class UsersService {
   }
 
   findOneByEmail(email:string){
-    return this.usersRepository.findOneBy({ email});
+    return this.usersRepository.findOneBy({email});
   }
   findOne(id: number) {
     return this.usersRepository.findOneBy({ id });
