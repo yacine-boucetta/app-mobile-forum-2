@@ -7,4 +7,5 @@ export class UpdateUserDto extends (GetUserDto) {
   readonly name: string;
   readonly lastname: string;
   readonly password: string;
+  readonly isAdmin:boolean;
 }

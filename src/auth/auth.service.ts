@@ -8,11 +8,9 @@ import * as bcrypt from 'bcrypt';
 export class AuthService {
     constructor(private readonly UsersService: UsersService, private readonly jwtService: JwtService) { }
 
-    async validateUser(email: string, pass: string): Promise<any> {
+    async validateUser(email: string, password: string): Promise<any> {
         const user = await this.UsersService.findOneByEmail(email);
-
         if (user) {
-            return user;
             const { password, ...result } = user;
             return result;
         }
@@ -25,7 +23,8 @@ export class AuthService {
         if (!foundUser) {
             return "l'email est incorrect";
         }
-        const passwordMatch =bcrypt.compare(GetUserDto.password,foundUser.password);
+        const passwordMatch =await bcrypt.compare(GetUserDto.password,foundUser.password);
+
         if (!passwordMatch) {
             return 'l email ou le mot de passe est incorrect'
         }
@@ -36,14 +35,11 @@ export class AuthService {
             email:foundUser.email,
             name:foundUser.name,
             lastname:foundUser.lastname,
+            isAdmin:foundUser.isAdmin,
         } 
-   
+        
         return {
             acess_token: this.jwtService.sign(payload),
         }
-
-
     }
-
-    
 }

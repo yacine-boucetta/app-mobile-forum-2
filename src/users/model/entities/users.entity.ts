@@ -1,12 +1,17 @@
+import { IsEmail} from "class-validator";
 import { Picture } from "src/pictures/model/entities/pictures.entity";
-import { Entity, PrimaryGeneratedColumn, Column, JoinTable, ManyToMany, BeforeInsert, OneToMany } from "typeorm"
+
+import { Entity, PrimaryGeneratedColumn, Column, JoinTable, ManyToMany, BeforeInsert, OneToMany, Unique, BaseEntity } from "typeorm"
 import {Event} from '../../../events/model/entities/events.entity'
 @Entity()
-export class User {
+@Unique(['email'])
+export class User extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @IsEmail()
   @Column({ length: 255 })
+
   email: string;
 
   @Column({ length: 255 })
@@ -22,15 +27,15 @@ export class User {
   @BeforeInsert()
   password: string;
   
-@ManyToMany(() => Event,event=>event.id, {
-  cascade: true,
-})
+  @Column()
+  isAdmin:boolean;
 
-@JoinTable()
-events: Event[];
+  @ManyToMany(() => Event, (event) => event.users)
+ public events: Event[];
 
-@OneToMany(() => Picture, (picture => picture.id_user)) 
-    picture: Picture[]
+
+@OneToMany(() => Picture, (picture) => picture.user)
+picture: Picture[]
 
 }
 

@@ -13,8 +13,11 @@ export class UsersService {
     @InjectRepository(User) private readonly usersRepository: Repository<User>,
   ) {}
 
-  async create(user: CreateUserDto): Promise<UserInterface> {
+  async create(user: CreateUserDto) {
     const passwordHash= await bcrypt.hash(user.password,10);
+    const getUserbefore= await this.usersRepository.findAndCountBy({isAdmin:true});
+  
+    if(getUserbefore[1] >=1){
     return this.usersRepository.save(
       {
         email:user.email,
@@ -22,8 +25,20 @@ export class UsersService {
         url:user.url,
         lastname:user.lastname,
         password: passwordHash,
+        isAdmin:false,
       }
-    );
+    )}
+    else{
+      return this.usersRepository.save(
+        {
+          email:user.email,
+          name:user.name,
+          url:user.url,
+          lastname:user.lastname,
+          password: passwordHash,
+          isAdmin:true,
+        }
+    )};
   }
 
   findAll(): Promise<User[]> {
@@ -46,12 +61,18 @@ export class UsersService {
       name:user.name,
       url:user.url,
       lastname:user.lastname,
-      password: passwordHash
+      password: passwordHash,
+      isAdmin:user.isAdmin,
     });
   }
 
 
-  remove(id: number) {
-    return this.usersRepository.delete({ id });
+ async remove(id: number) {
+    const getUserbefore= await this.usersRepository.findAndCountBy({isAdmin:true});
+    if(getUserbefore[1]==1){
+        return"your application need an administrator";
+    }else{
+        return this.usersRepository.delete({ id });
+    }
   }
 }

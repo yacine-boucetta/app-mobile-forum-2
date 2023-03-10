@@ -14,19 +14,12 @@ export class Picture extends BaseEntity {
   url: string;
 
   @Column()
-  id_user: number;
-
-  @Column()
   @CreateDateColumn()
   date_picture: Date;
 
-  @ManyToMany(() => Event,event=>event, {
-    cascade: true,
-  })
-  
-  @JoinTable()
-  events: Event[];
+  @ManyToOne(() => User, (user) => user.picture,{onDelete: 'NO ACTION', onUpdate: 'NO ACTION'})
+  user: number
 
-  @ManyToOne((type) => User, (user) => user.id)
-  user: User
+  @ManyToOne(() => Event, (event) => event.picture,{onDelete: 'NO ACTION', onUpdate: 'NO ACTION'})
+    event: number
 }

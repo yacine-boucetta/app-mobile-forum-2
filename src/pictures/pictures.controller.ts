@@ -24,6 +24,10 @@ export class PicturesController {
     return this.picturesService.findOne(+id);
   }
 
+  @Get('find/:id_event')
+  findPictureByEvent(@Param('id_event') id_event: number){
+    return this.picturesService.findPictureByEvent(+id_event);
+  }
   @Put(':id')
   updateUser(@Param('id') id: string, @Body() picture: UpdatePictureDto) {
     return this.picturesService.updatePicture(id, picture);

@@ -4,8 +4,7 @@ export interface EventInterface {
     name?:string;
     start_date?:Date;
     end_date?: Date;
-    id_user?:number;
-    event_state?:number;
+    userId?:number;
     description?:string;
     url_event:string;
     isPrivate?:boolean;

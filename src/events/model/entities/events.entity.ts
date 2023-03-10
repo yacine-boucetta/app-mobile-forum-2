@@ -1,13 +1,12 @@
 
-import { Transform, TransformFnParams } from 'class-transformer';
-import { format } from 'path';
+import { Picture } from 'src/pictures/model/entities/pictures.entity';
 import { User } from "src/users/model/entities/users.entity";
 
-import { Entity, PrimaryGeneratedColumn, Column, BaseEntity ,ManyToOne,OneToMany,CreateDateColumn, ManyToMany, JoinColumn, JoinTable,} from "typeorm"
+import { Entity, PrimaryGeneratedColumn, Column, BaseEntity ,ManyToOne,OneToMany,CreateDateColumn, ManyToMany, JoinColumn, JoinTable, Unique,} from "typeorm"
+
 
 @Entity()
-export class Event  {
-
+export class Event extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -25,9 +24,6 @@ export class Event  {
   @Column()
   id_user: number;
 
-  @Column()
-  event_state:number;
-
  @Column({ length: 255 })
   description: string;
 
@@ -36,6 +32,14 @@ export class Event  {
 
   @Column()
   isPrivate:boolean;
+
+  @ManyToMany(() => User,(user)=>user.events,{cascade:true})
+  @JoinTable()
+  public users: User[];
+  
+
+  @OneToMany(() => Picture, (picture) => picture.event)
+    picture: Picture[]
   
 }
 

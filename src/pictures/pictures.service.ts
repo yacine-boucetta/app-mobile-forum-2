@@ -13,21 +13,23 @@ export class PicturesService {
 
   async create(picture: CreatePictureDto) {
   
-    return this.picturesRepository.save(
-        {
-          name: picture.name,
-          url: picture.url,
-          id_user: picture.id_user,
-          date_picture: new Date()
-        },
-      )
-    
+    let pictures = new Picture()
+   
+    pictures.name= picture.name,
+    pictures.url=picture.url,
+    pictures.user=picture.userId,
+    pictures.date_picture= new Date(),
+    pictures.event=picture.eventId,
+
+    await this.picturesRepository.manager.save(pictures)
   }
 
   findAll(): Promise<Picture[]> {
     return this.picturesRepository.find();
   }
-
+  findPictureByEvent(id:number){
+   
+  }
   findOne(id: number) {
     return this.picturesRepository.findOneBy({ id });
   }
@@ -37,7 +39,6 @@ export class PicturesService {
       .update(id,{
         name: picture.name,
         url: picture.url,
-        id_user: picture.id_user,
         date_picture: new Date()
       })
     

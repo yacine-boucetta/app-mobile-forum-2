@@ -11,13 +11,15 @@ import { Picture } from './pictures/model/entities/pictures.entity';
 import { EventsModule } from './events/events.module';
 import { AuthModule } from './auth/auth.module';
 import { NestFactory } from '@nestjs/core/nest-factory';
+import { AdminModule } from './admin/admin.module';
+
+
+
 
 
 @Module({
   imports: [
     TypeOrmModule.forRoot({ 
-
-
       type: 'mysql',
       host: 'localhost',
       port: 3306,
@@ -31,8 +33,7 @@ import { NestFactory } from '@nestjs/core/nest-factory';
       migrations: [],
       autoLoadEntities: true,
     }),
-    UsersModule,PicturesModule,EventsModule,AuthModule
-  ],
+    UsersModule,PicturesModule,EventsModule,AuthModule,AdminModule],
   controllers: [AppController],
   providers: [AppService],
 })
