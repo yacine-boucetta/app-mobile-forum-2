@@ -20,6 +20,20 @@ export class EventsController {
     return this.eventsService.findEventByIdAdmin(+id);
   }
 
+  @Get('')
+  findAll() {
+    return this.eventsService.findAll();
+  }
+
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.eventsService.findOne(+id);
+  }
+
+  @Get('userInvitation/:idUser')
+  findInvitation(@Param('idUser') id: number){
+    return this.eventsService.findInvitation(+id);
+  }
   @Get('findUser/:id')
   findAllUserInEvent(@Param('id') id: number){
     return this.eventsService.findAllUserInEvent(+id);
@@ -30,7 +44,10 @@ export class EventsController {
     return this.eventsService.findAllEventWithIdUser(+id_user);
   }
 
-
+  @Post('accept_Invitation/:id_invitation')
+  accept_Invitation(@Param('id_invitation') id_invitation:number){
+    return this.eventsService.accept_Invitation(id_invitation);
+  }
   @Post('register')
   async register(@Body() event:CreateEventDto) {
     return this.eventsService.create(event);
@@ -42,29 +59,25 @@ export class EventsController {
     return this.eventsService.updateEventUsers(eventId,email);
   }
 
-  @Delete('deluser/:id')
-  async DeleteEventUsers( @Param('id') eventId: string,@Body() updateEventUsersDto: UpdateEventDto,
-  ): Promise<void> {
-    return this.eventsService.deleteEventUsers(eventId,updateEventUsersDto);
-  }
-
-  @Get('')
-  findAll() {
-    return this.eventsService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.eventsService.findOne(+id);
-  }
 
   @Patch(':id')
   updateUser(@Param('id') id: string, @Body() Event: UpdateEventDto) {
     return this.eventsService.updateEvent(id, Event);
   }
 
+  @Delete('deluser/:id')
+  async DeleteEventUsers( @Param('id') eventId: string,@Body() updateEventUsersDto: UpdateEventDto,
+  ): Promise<void> {
+    return this.eventsService.deleteEventUsers(eventId,updateEventUsersDto);
+  }
+
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.eventsService.remove(+id);
+  }
+
+  @Delete('deleteInvitation/:id')
+  deleteInvitation(@Param('id') id:string){
+    return this.eventsService.delete_Invitation(+id);
   }
 }

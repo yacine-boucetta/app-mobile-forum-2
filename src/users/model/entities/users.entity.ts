@@ -30,12 +30,21 @@ export class User extends BaseEntity {
   @Column()
   isAdmin:boolean;
 
-  @ManyToMany(() => Event, (event) => event.users)
- public events: Event[];
+  @OneToMany( () => Event, (event) => event.users)
+  @JoinTable({ name: 'user_event',
+  joinColumn: {
+    name: 'user',
+    referencedColumnName: 'id',
+  },
+  inverseJoinColumn: {
+    name: 'event',
+    referencedColumnName: 'id',
+  }})
+  events:Event[];
 
 
-@OneToMany(() => Picture, (picture) => picture.user)
-picture: Picture[]
+  @OneToMany(() => Picture, (picture) => picture.user)
+  picture: Picture[]
 
 }
 

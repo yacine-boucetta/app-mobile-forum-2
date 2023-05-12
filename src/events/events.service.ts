@@ -2,12 +2,11 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { GetUserDto } from 'src/users/dto/get_user.dto';
 import { User } from 'src/users/model/entities/users.entity';
-import { Entity, getConnection, In, RelationQueryBuilder, Repository} from 'typeorm';
+import { Repository} from 'typeorm';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-dto';
-import { UpdateEventUsersDto } from './dto/updateUserEvent.dto';
 import { Event } from './model/entities/events.entity';
-
+import { UserEvent } from 'src/userEvent.entity';
 
 
 @Injectable()
@@ -16,7 +15,9 @@ export class EventsService {
     @InjectRepository(Event)
     private eventsRepository: Repository<Event>,
     @InjectRepository(User)
-    private usersRepository: Repository<User>
+    private usersRepository: Repository<User>,
+    @InjectRepository(UserEvent)
+    private userEventRepository: Repository<UserEvent>
   ) {}
 
   async create(event: CreateEventDto) {
@@ -39,31 +40,46 @@ export class EventsService {
     await this.eventsRepository.manager.save(newEvent);
   }
 
-  async updateEventUsers(id: string, email:GetUserDto): Promise<void> {
-    const reqsUser=await this.usersRepository.findBy({email:email.email});
-    let newUser =new User();
-    newUser.id=reqsUser[0].id;
-    await this.usersRepository.save(newUser);
+  async updateEventUsers(id: string, User:GetUserDto): Promise<any> {
+    const user = await this.usersRepository.findOneBy({email:User.email});
+    const event = await this.eventsRepository.findOneBy({id:+id});
+    const userEvent = new UserEvent();
+    userEvent.user = user;
+    userEvent.event = event;
+    userEvent.isInvitated=false;
 
-    await this.eventsRepository
+    this.userEventRepository
     .createQueryBuilder()
-    .relation(Event, "users")
-    .of(id)
-    .add(newUser);
+    .select("*")
+    .where("userId = "+ user.id+" and eventId = "+event.id)
+    .execute()
+    .then(elm => {if (elm.length){
+      return 
+    }else{
+      this.userEventRepository.save(userEvent)
+    }
+  })
 
+  
   }
 
    async deleteEventUsers(id: string, event: UpdateEventDto): Promise<void> {
-    const reqsUser=await this.usersRepository.findOneBy({id:event.id_user});
-    const newUser =new User();
-    newUser.id=reqsUser.id;
-    this.usersRepository.save(newUser);
+  
+    const user = await this.usersRepository.findOneBy({id:event.id});
+    const events = await this.eventsRepository.findOneBy({id:+id});
 
-    this.eventsRepository
-      .createQueryBuilder()
-      .relation(Event, "users")
-      .of(id)
-      .remove(newUser)
+    const userEvent = new UserEvent();
+    userEvent.user = user;
+    userEvent.event = events;
+
+
+    await this.userEventRepository
+    .createQueryBuilder()
+    .delete()
+    .where("userId = "+ user.id+" and eventId = "+events.id)
+    .execute()
+    
+  
   }
 
 
@@ -76,14 +92,37 @@ export class EventsService {
   }
 
   async findAllUserInEvent(id_event: number) {
-
-  return await  this.eventsRepository
-    .createQueryBuilder('event')
-    .leftJoinAndSelect("event.users", "user")
-    .where("event.id=:id",{id:id_event})
-    .getMany()
+    const queryBuilder = this.usersRepository
+    .createQueryBuilder()
+    .select("*")
+    .innerJoin("user_event","user_event","user_event.userId = user.id")
+    .innerJoin("event","event","user_event.eventId = event.id")
+    .where("user_event.eventId = "+ id_event)
+    .execute()
+    const event = await queryBuilder;
+    return event;
   }
+async findInvitation(id_user:number){
+ return await this.eventsRepository
+  .createQueryBuilder()
+  .select("event.description,event.start_date,event.end_date,event.name,event.id,user_event.id")
+  .innerJoin("user_event","user_event","user_event.eventId = event.id")
+  .innerJoin("user","user","user_event.userId = user.id")
+  .where("user.id = "+ id_user +" and user_event.isInvitated = false")
+  .execute()
+}
 
+delete_Invitation(id_user_event:number){
+return this.userEventRepository.delete(id_user_event);
+}
+
+async accept_Invitation(id_invitation:number){
+return await this.userEventRepository
+.createQueryBuilder()
+.update()
+.set({isInvitated:true})
+.where("user_event.id = " + id_invitation).execute()
+}
   async findAllEventWithIdUser(id_user: number) {
 
     return await  this.usersRepository
@@ -99,8 +138,6 @@ export class EventsService {
 
   async updateEvent(id: string, event: UpdateEventDto) {
  
-    let test = new Array();
-    
     const updateEventDatabase = await this.eventsRepository.findOneBy({id:+id} );
     updateEventDatabase.name= event.name,
     updateEventDatabase.description= event.description,

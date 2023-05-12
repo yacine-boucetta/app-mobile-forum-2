@@ -46,22 +46,25 @@ export class UsersService {
   }
 
   findOneByEmail(email:string){
-    return this.usersRepository.findOneBy({email});
+    console.log(email)
+    return this.usersRepository.findOneBy({email:email});
   }
   findOne(id: number) {
     return this.usersRepository.findOneBy({ id });
   }
   
   async updateUser(id: number, user: UpdateUserDto): Promise<any> {
-    const passwordHash= await bcrypt.hash(user.password,10);
-    
+    var passwordHash= user.password;
+    if(user.password){
+      passwordHash = await bcrypt.hash(user.password,10);
+    }
     return this.usersRepository.update(id,
     {
       email:user.email,
       name:user.name,
       url:user.url,
       lastname:user.lastname,
-      password: passwordHash,
+      password:passwordHash,
       isAdmin:user.isAdmin,
     });
   }

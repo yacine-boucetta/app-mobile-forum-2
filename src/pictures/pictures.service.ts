@@ -20,15 +20,20 @@ export class PicturesService {
     pictures.user=picture.userId,
     pictures.date_picture= new Date(),
     pictures.event=picture.eventId,
-
     await this.picturesRepository.manager.save(pictures)
   }
 
   findAll(): Promise<Picture[]> {
     return this.picturesRepository.find();
   }
-  findPictureByEvent(id:number){
+  findPictureByEvent(id:number):Promise<Picture[]>{
+   return this.picturesRepository
+   .createQueryBuilder('picture')
+   .where('eventId=:id',{id:id})
+   .getMany()
    
+
+
   }
   findOne(id: number) {
     return this.picturesRepository.findOneBy({ id });

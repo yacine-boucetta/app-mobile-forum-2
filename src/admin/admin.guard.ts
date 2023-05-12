@@ -1,29 +1,38 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import { Observable } from 'rxjs';
-import { request } from 'express';
 import * as jwt from 'jsonwebtoken';
+import { jwtConstants } from '../auth/constants';
+import { JwtService } from '@nestjs/jwt';
+import { UserInterface } from 'src/users/model/users.interface';
+
+
 @Injectable()
 export class AdminGuard implements CanActivate {
-  canActivate(
-    context: ExecutionContext,
-  ): boolean | Promise<boolean> | Observable<boolean> {
-    const token = request.headers.authorization;
-    const hasBooleanProperty = request.body.isAdmin // replace with the actual property name
+  constructor(private jwtService: JwtService) {}
 
-    if (!token || !hasBooleanProperty) {
+  canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
+    const request = context.switchToHttp().getRequest();
+    const token = request.headers.authorization; // assuming the token is sent in the "Authorization" header
+   console.log(token);
+     if (token == null || token== undefined) {
       return false;
     }
 
-    // Verify token and check boolean property
-    // Example using JWT
-    try {
-      const decodedToken = jwt.verify(token, 'secret-key');
-      const { isAdmin} = decodedToken;
-      return isAdmin === true;
-    } catch (err) {
-      return false;
-    }
- 
+try{
+
+  const decodedToken = this.jwtService.decode(token) as { isAdmin: boolean };
+  console.log(decodedToken.isAdmin)
+          if(decodedToken.isAdmin == true){
+          return true 
+        }
+        else{
+          return false
+        }
+          
+        }
+        catch{
+          return false 
+        }  
+    
   }
 }
-

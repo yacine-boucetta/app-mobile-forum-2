@@ -33,11 +33,24 @@ export class Event extends BaseEntity {
   @Column()
   isPrivate:boolean;
 
-  @ManyToMany(() => User,(user)=>user.events,{cascade:true})
-  @JoinTable()
-  public users: User[];
-  
 
+  @OneToMany(() => User, (user) => user.events,{cascade:true})
+  @JoinTable({
+    name: 'user_event',
+    joinColumn: {
+      name: 'user',
+      referencedColumnName: 'id',
+    },
+    inverseJoinColumn: {
+      name: 'event',
+      referencedColumnName: 'id',
+    },
+
+  })
+    users:User[];
+ 
+
+  
   @OneToMany(() => Picture, (picture) => picture.event)
     picture: Picture[]
   

@@ -7,7 +7,11 @@ export class AuthController {
     constructor(private authService: AuthService){}
 
     @Post('login')
-        async login(@Body() GetUserDto: GetUserDto){   
+        async login(@Body() GetUserDto:GetUserDto){   
             return this.authService.login(GetUserDto);
     }
+    @Post('refresh')
+    async refresh(@Body() refresh:string){   
+        return this.authService.refresh(refresh);
+}
 }
