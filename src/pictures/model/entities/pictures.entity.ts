@@ -17,9 +17,9 @@ export class Picture extends BaseEntity {
   @CreateDateColumn()
   date_picture: Date;
 
-  @ManyToOne(() => User, (user) => user.picture,{onDelete: 'NO ACTION', onUpdate: 'NO ACTION'})
+  @ManyToOne(() => User, (user) => user.picture)
   user: number
 
-  @ManyToOne(() => Event, (event) => event.picture,{onDelete: 'NO ACTION', onUpdate: 'NO ACTION'})
+  @ManyToOne(() => Event, (event) => event.picture,{ onDelete:'CASCADE',onUpdate:'CASCADE',})
     event: number
 }

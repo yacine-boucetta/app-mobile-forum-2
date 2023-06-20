@@ -35,9 +35,8 @@ export class EventsService {
       newEvent.end_date = new Date(),
       newEvent.isPrivate = event.isPrivate,
       newEvent.description = event.description,
-      newEvent.users = [newUser];
-
     await this.eventsRepository.manager.save(newEvent);
+       
   }
 
   async updateEventUsers(id: string, User:GetUserDto): Promise<any> {
@@ -63,9 +62,11 @@ export class EventsService {
   
   }
 
-   async deleteEventUsers(id: string, event: UpdateEventDto): Promise<void> {
+  async deleteEventUsers(id: string,id_user:string): Promise<void> {
+
   
-    const user = await this.usersRepository.findOneBy({id:event.id});
+    const user = await this.usersRepository.findOneBy({id:+id_user});
+   
     const events = await this.eventsRepository.findOneBy({id:+id});
 
     const userEvent = new UserEvent();
@@ -78,8 +79,6 @@ export class EventsService {
     .delete()
     .where("userId = "+ user.id+" and eventId = "+events.id)
     .execute()
-    
-  
   }
 
 
@@ -91,17 +90,16 @@ export class EventsService {
     return this.eventsRepository.findBy({ id_user: id_user });
   }
 
-  async findAllUserInEvent(id_event: number) {
-    const queryBuilder = this.usersRepository
+  async findAllUserInEvent(id_event: number):Promise<User[]> {
+    return await this.usersRepository
     .createQueryBuilder()
-    .select("*")
+    .select("user.name,user.email,user.url,user.id")
     .innerJoin("user_event","user_event","user_event.userId = user.id")
     .innerJoin("event","event","user_event.eventId = event.id")
     .where("user_event.eventId = "+ id_event)
     .execute()
-    const event = await queryBuilder;
-    return event;
   }
+
 async findInvitation(id_user:number){
  return await this.eventsRepository
   .createQueryBuilder()
@@ -148,8 +146,13 @@ return await this.userEventRepository
 
     return await this.eventsRepository.manager.save(updateEventDatabase);
   }
+
   remove(id: number) {
-    return this.eventsRepository.delete({ id });
+    this.userEventRepository.createQueryBuilder()
+    .delete()
+    .where("user_event.eventId = "+ id)
+
+    this.eventsRepository.delete({id});
   }
 }
 

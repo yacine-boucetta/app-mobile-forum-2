@@ -38,9 +38,9 @@ export class AuthService {
             lastname:foundUser.lastname,
             isAdmin:foundUser.isAdmin,
         } 
-
-        const accessToken = this.jwtService.sign(payload,{expiresIn:'30 days'});
-        const refreshToken = this.jwtService.sign(payload);
+        
+        const accessToken = this.jwtService.sign(payload,{ expiresIn:'30 days'});
+        const refreshToken = this.jwtService.sign(payload,{ expiresIn:'30 days'});
       
         
         return {
@@ -50,10 +50,10 @@ export class AuthService {
     }
 
     async refresh(refreshToken):Promise<any> {
-
-        const decoded = await this.jwtService.verify(refreshToken.refresh);
+        console.log(refreshToken)
+        const decoded = await this.jwtService.verify(refreshToken);
         const user = await this.UsersService.findOne(decoded.id);
-
+        
         if (!user) {
           throw new UnauthorizedException('Invalid token');
         }
@@ -69,7 +69,7 @@ export class AuthService {
         } 
           const accessToken = this.jwtService.sign(payload);
           return {
-            access_token: accessToken,
+            acess_token: accessToken,
           };
         } catch (err) {
           throw new UnauthorizedException('Invalid token');

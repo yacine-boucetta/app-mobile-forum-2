@@ -6,11 +6,13 @@ import { UserInterface } from './model/users.interface';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
+import { UserEvent } from 'src/userEvent.entity';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User) private readonly usersRepository: Repository<User>,
+    @InjectRepository(UserEvent) private userEventRepository: Repository<UserEvent>
   ) {}
 
   async create(user: CreateUserDto) {
@@ -41,16 +43,15 @@ export class UsersService {
     )};
   }
 
-  findAll(): Promise<User[]> {
-    return this.usersRepository.find();
+  async findAll(): Promise<User[]> {
+    return await this.usersRepository.find();
   }
 
-  findOneByEmail(email:string){
-    console.log(email)
-    return this.usersRepository.findOneBy({email:email});
+  async findOneByEmail(email:string){
+    return await this.usersRepository.findOneBy({email:email});
   }
-  findOne(id: number) {
-    return this.usersRepository.findOneBy({ id });
+  async findOne(id: number) {
+    return  await this.usersRepository.findOneBy({ id });
   }
   
   async updateUser(id: number, user: UpdateUserDto): Promise<any> {
@@ -58,23 +59,32 @@ export class UsersService {
     if(user.password){
       passwordHash = await bcrypt.hash(user.password,10);
     }
-    return this.usersRepository.update(id,
-    {
-      email:user.email,
-      name:user.name,
-      url:user.url,
-      lastname:user.lastname,
-      password:passwordHash,
-      isAdmin:user.isAdmin,
-    });
+
+
+    const updateuserDatabase = await this.usersRepository.findOneBy({id:id} );
+    updateuserDatabase.id= id;
+    updateuserDatabase.email=user.email;
+    updateuserDatabase.isAdmin=false;
+    updateuserDatabase.name=user.name;
+    updateuserDatabase.url=user.url;
+    updateuserDatabase.lastname=user.lastname;
+    updateuserDatabase.password=passwordHash;
+
+
+    return await this.usersRepository.manager.save(updateuserDatabase);
+ 
   }
 
 
  async remove(id: number) {
+  
     const getUserbefore= await this.usersRepository.findAndCountBy({isAdmin:true});
     if(getUserbefore[1]==1){
         return"your application need an administrator";
     }else{
+      this.userEventRepository.createQueryBuilder()
+  .delete()
+  .where("user_event.userID=:id",{id:id})
         return this.usersRepository.delete({ id });
     }
   }

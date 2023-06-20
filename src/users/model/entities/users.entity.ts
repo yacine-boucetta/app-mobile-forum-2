@@ -43,7 +43,7 @@ export class User extends BaseEntity {
   events:Event[];
 
 
-  @OneToMany(() => Picture, (picture) => picture.user)
+  @OneToMany(() => Picture, (picture) => picture.user,{onDelete:'CASCADE',onUpdate:'CASCADE'})
   picture: Picture[]
 
 }

@@ -1,9 +1,6 @@
 import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import { Observable } from 'rxjs';
-import * as jwt from 'jsonwebtoken';
-import { jwtConstants } from '../auth/constants';
 import { JwtService } from '@nestjs/jwt';
-import { UserInterface } from 'src/users/model/users.interface';
 
 
 @Injectable()

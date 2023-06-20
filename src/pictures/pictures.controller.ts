@@ -19,6 +19,11 @@ export class PicturesController {
     return this.picturesService.findAll();
   }
 
+  @Get('findpicture/:id_user')
+  findPicturebyIduser(@Param('id_user')id_user:number){
+    return this.picturesService.findPictureByIduser(+id_user)
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.picturesService.findOne(+id);

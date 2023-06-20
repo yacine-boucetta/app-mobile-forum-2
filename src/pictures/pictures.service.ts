@@ -26,8 +26,15 @@ export class PicturesService {
   findAll(): Promise<Picture[]> {
     return this.picturesRepository.find();
   }
-  findPictureByEvent(id:number):Promise<Picture[]>{
-   return this.picturesRepository
+
+  async findPictureByIduser(id:number):Promise<Picture[]>{
+    return await this.picturesRepository
+    .createQueryBuilder('picture')
+    .where('userId=:id',{id:id})
+    .getMany()
+  }
+  async findPictureByEvent(id:number):Promise<Picture[]>{
+   return await this.picturesRepository
    .createQueryBuilder('picture')
    .where('eventId=:id',{id:id})
    .getMany()
@@ -35,8 +42,8 @@ export class PicturesService {
 
 
   }
-  findOne(id: number) {
-    return this.picturesRepository.findOneBy({ id });
+ async findOne(id: number) {
+    return await this.picturesRepository.findOneBy({ id });
   }
 
   async updatePicture(id: string, picture: UpdatePictureDto) {

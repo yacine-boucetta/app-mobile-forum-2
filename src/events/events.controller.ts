@@ -44,7 +44,7 @@ export class EventsController {
     return this.eventsService.findAllEventWithIdUser(+id_user);
   }
 
-  @Post('accept_Invitation/:id_invitation')
+  @Patch('accept_Invitation/:id_invitation')
   accept_Invitation(@Param('id_invitation') id_invitation:number){
     return this.eventsService.accept_Invitation(id_invitation);
   }
@@ -65,10 +65,10 @@ export class EventsController {
     return this.eventsService.updateEvent(id, Event);
   }
 
-  @Delete('deluser/:id')
-  async DeleteEventUsers( @Param('id') eventId: string,@Body() updateEventUsersDto: UpdateEventDto,
+  @Delete('deluser/:id/:id_user')
+  async DeleteEventUsers( @Param('id') eventId: string, @Param('id_user') userId: string
   ): Promise<void> {
-    return this.eventsService.deleteEventUsers(eventId,updateEventUsersDto);
+    return this.eventsService.deleteEventUsers(eventId,userId);
   }
 
   @Delete(':id')

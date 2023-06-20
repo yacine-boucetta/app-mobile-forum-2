@@ -9,9 +9,10 @@ export class UserEvent extends BaseEntity{
     @Column()
     isInvitated: boolean;
   
-    @ManyToOne(() => User, (user) => user.events)
+    
+    @ManyToOne(() => User, (user) => user.events,{onDelete:'CASCADE',onUpdate:'CASCADE'})
     user: User;
   
-    @ManyToOne(() => Event, (event) => event.users)
+    @ManyToOne(() => Event, (event) => event.users,{onDelete:'CASCADE',onUpdate:'CASCADE'})
     event: Event;
 }

@@ -34,7 +34,7 @@ export class Event extends BaseEntity {
   isPrivate:boolean;
 
 
-  @OneToMany(() => User, (user) => user.events,{cascade:true})
+  @OneToMany(() => User, (user) => user.events)
   @JoinTable({
     name: 'user_event',
     joinColumn: {
