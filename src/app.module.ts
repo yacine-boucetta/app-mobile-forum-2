@@ -12,6 +12,7 @@ import { EventsModule } from './events/events.module';
 import { AuthModule } from './auth/auth.module';
 import { NestFactory } from '@nestjs/core/nest-factory';
 import { AdminModule } from './admin/admin.module';
+import { typeOrmConfig } from './config';
 
 
 
@@ -19,20 +20,7 @@ import { AdminModule } from './admin/admin.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({ 
-      type: 'mysql',
-      host: 'localhost',
-      port: 3306,
-      username: 'root',
-      password: '',
-      database: 'api_share_event',
-      synchronize: true,
-      logging: true,
-      entities: [User,Picture,Event],
-      subscribers: [],
-      migrations: [],
-      autoLoadEntities: true,
-    }),
+    TypeOrmModule.forRoot(typeOrmConfig),
     UsersModule,PicturesModule,EventsModule,AuthModule,AdminModule],
   controllers: [AppController],
   providers: [AppService],

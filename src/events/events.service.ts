@@ -7,6 +7,7 @@ import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-dto';
 import { Event } from './model/entities/events.entity';
 import { UserEvent } from 'src/userEvent.entity';
+import { UpdateUserDto } from 'src/users/dto/update-user.dto';
 
 
 @Injectable()
@@ -36,13 +37,14 @@ export class EventsService {
       newEvent.isPrivate = event.isPrivate,
       newEvent.description = event.description,
     await this.eventsRepository.manager.save(newEvent);
-       
   }
 
-  async updateEventUsers(id: string, User:GetUserDto): Promise<any> {
+  async updateEventUsers(eventId: string, User:GetUserDto): Promise<any> {
     const user = await this.usersRepository.findOneBy({email:User.email});
-    const event = await this.eventsRepository.findOneBy({id:+id});
-    const userEvent = new UserEvent();
+    if (user) {
+      const event = await this.eventsRepository.findOneBy({ id:+eventId});
+      if (event) {
+        const userEvent = new UserEvent();
     userEvent.user = user;
     userEvent.event = event;
     userEvent.isInvitated=false;
@@ -58,6 +60,14 @@ export class EventsService {
       this.userEventRepository.save(userEvent)
     }
   })
+      } 
+    } else {
+      return "error";
+    }
+    
+
+
+    
 
   
   }

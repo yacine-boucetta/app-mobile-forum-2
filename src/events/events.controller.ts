@@ -53,7 +53,7 @@ export class EventsController {
     return this.eventsService.create(event);
   }
 
-  @Patch('adduser/:id')
+  @Post('adduser/:id')
   async updateEventUsers( @Param('id') eventId: string,@Body() email:GetUserDto
   ){
     return this.eventsService.updateEventUsers(eventId,email);
