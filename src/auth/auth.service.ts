@@ -26,6 +26,7 @@ export class AuthService {
           return "l'email est incorrect";
       }
       const passwordMatch =await bcrypt.compare(GetUserDto.password,foundUser.password);
+      
       if (!passwordMatch) {
           return 'l email ou le mot de passe est incorrect'
       }

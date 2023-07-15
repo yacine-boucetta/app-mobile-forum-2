@@ -8,6 +8,7 @@ import { UpdateEventDto } from './dto/update-dto';
 import { Event } from './model/entities/events.entity';
 import { UserEvent } from 'src/userEvent.entity';
 import { UpdateUserDto } from 'src/users/dto/update-user.dto';
+import { executionAsyncResource } from 'async_hooks';
 
 
 @Injectable()
@@ -65,11 +66,6 @@ export class EventsService {
       return "error";
     }
     
-
-
-    
-
-  
   }
 
   async deleteEventUsers(id: string,id_user:string): Promise<void> {
@@ -96,7 +92,7 @@ export class EventsService {
     return this.eventsRepository.find();
   }
 
-  async findEventByIdAdmin(id_user: number) {
+  async findEventByIdAdmin(id_user: number):Promise<Event[]> {
     return this.eventsRepository.findBy({ id_user: id_user });
   }
 
@@ -110,6 +106,9 @@ export class EventsService {
     .execute()
   }
 
+  async FindAllEvent():Promise<Event[]> {
+    return this.eventsRepository.findBy({isPrivate:false}); 
+  }
 async findInvitation(id_user:number){
  return await this.eventsRepository
   .createQueryBuilder()
@@ -131,13 +130,10 @@ return await this.userEventRepository
 .set({isInvitated:true})
 .where("user_event.id = " + id_invitation).execute()
 }
-  async findAllEventWithIdUser(id_user: number) {
 
-    return await  this.usersRepository
-    .createQueryBuilder('user')
-    .leftJoinAndSelect("user.events", "event")
-      .where("user.id=:id",{id:id_user})
-      .getMany()
+  async findAllEventWithIdUser(id_user: number) {
+    return await  this.eventsRepository
+    .query("select event.description,event.id,event.start_date,event.end_date,event.name,event.url_event from event INNER JOIN user_event ON user_event.eventId=event.id INNER JOIN user ON user_event.userId= user.id where user_event.isInvitated=true and user.id =" + id_user)
     }
 
   findOne(id: number) {

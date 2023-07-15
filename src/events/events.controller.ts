@@ -10,6 +10,7 @@ import { UsersService } from 'src/users/users.service';
 import { GetUserDto } from 'src/users/dto/get_user.dto';
 import { UpdateEventUsersDto } from './dto/updateUserEvent.dto';
 import { UpdateUserDto } from 'src/users/dto/update-user.dto';
+import { get } from 'http';
 
 @Controller('events')
 export class EventsController {
@@ -25,6 +26,12 @@ export class EventsController {
     return this.eventsService.findAll();
   }
 
+  @Get('FindAllEvent')
+  findPublic() {
+    return this.eventsService.FindAllEvent();
+  }
+
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.eventsService.findOne(+id);
@@ -34,10 +41,12 @@ export class EventsController {
   findInvitation(@Param('idUser') id: number){
     return this.eventsService.findInvitation(+id);
   }
+
   @Get('findUser/:id')
   findAllUserInEvent(@Param('id') id: number){
     return this.eventsService.findAllUserInEvent(+id);
   }
+
 
   @Get('findEvent/:id')
   findAllEventWithIdUser(@Param('id') id_user: number){
@@ -80,4 +89,6 @@ export class EventsController {
   deleteInvitation(@Param('id') id:string){
     return this.eventsService.delete_Invitation(+id);
   }
+
+ 
 }

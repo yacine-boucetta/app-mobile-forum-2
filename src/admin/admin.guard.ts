@@ -9,6 +9,7 @@ export class AdminGuard implements CanActivate {
 
   canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
     const request = context.switchToHttp().getRequest();
+    
     const token = request.headers.authorization; // assuming the token is sent in the "Authorization" header
    console.log(token);
      if (token == null || token== undefined) {
