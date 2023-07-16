@@ -19,7 +19,7 @@ import { typeOrmConfig } from './config';
 
 
 @Module({
-  imports: [
+  imports: [TypeOrmModule.forRoot(typeOrmConfig),
     UsersModule,
     PicturesModule,
     EventsModule,
