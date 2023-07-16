@@ -20,8 +20,11 @@ import { typeOrmConfig } from './config';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot(typeOrmConfig),
-    UsersModule,PicturesModule,EventsModule,AuthModule,AdminModule],
+    UsersModule,
+    PicturesModule,
+    EventsModule,
+    AuthModule,
+    AdminModule],
   controllers: [AppController],
   providers: [AppService],
 })
