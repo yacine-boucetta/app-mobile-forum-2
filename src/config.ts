@@ -4,17 +4,19 @@ import { User } from "./users/model/entities/users.entity";
 
 export const typeOrmConfig:TypeOrmModuleOptions =  {
             type: 'mysql',
-            host: '',
+            host: 'localhost',
             port: 3306,
-            username: '',
-            password: '',
-            database: '',
+            connectorPackage:'mysql2',
+            password: 'Japanexpo10.',
+            username: 'shareEvent',
+            database: 'yacine-boucetta_share_event',
             synchronize: true,
             logging: true,
             entities: [User,Picture,Event],
             subscribers: [],
             migrations: [],
             autoLoadEntities: true,
-};
+
+}
 
 
